@@ -14,6 +14,9 @@ import java.util.Map;
 @Slf4j
 public class ObjectDeserializer<T> implements Deserializer<T> {
 
+    public static final String TOPIC_CONFIGURATION = "object.deserialization.topics";
+    private Map<String, KafkaTopics> topics;
+
     private static ObjectMapper objectMapper;
 
     static {
@@ -21,14 +24,22 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
         objectMapper = new JsonConfiguration().objectMapper();
     }
 
+    /**
+     * The configure method simply receives the entire Property instance you used to configure the Producer/Consumer.
+     * @param map
+     * @param b
+     */
     public void configure(Map<String, ?> map, boolean b) {
-        // do nothing
+        topics = (Map)map.get(TOPIC_CONFIGURATION);
+        if(topics == null){
+            throw new RuntimeException("Topic Configuration not found");
+        }
     }
 
     public T deserialize(String topic, byte[] bytes) {
         StopWatch stopWatch = new StopWatch("deserialize");
         stopWatch.start("kafka topic");
-        KafkaTopics kafkaTopic = KafkaTopics.valueOf(topic);
+        KafkaTopics kafkaTopic = topics.get(topic);
         stopWatch.stop();
 
         String json = new String(bytes);

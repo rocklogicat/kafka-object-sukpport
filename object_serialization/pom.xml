@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-    <lombok.version>1.16.4</lombok.version>
+    <lombok.version>1.16.10</lombok.version>
     <kafka.version>0.10.0.1</kafka.version>
     </properties>
 
@@ -13,6 +13,7 @@
     <groupId>at.rocklogic.kafka</groupId>
     <artifactId>object-support</artifactId>
     <version>0.1-SNAPSHOT</version>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>

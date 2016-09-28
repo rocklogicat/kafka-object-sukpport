@@ -21,8 +21,13 @@ public class ObjectSerializer<T> implements Serializer<T>{
     }
 
 
+    /**
+     * The configure method simply receives the entire Property instance you used to configure the Producer/Consumer.
+     * @param map
+     * @param b
+     */
     public void configure(Map<String, ?> map, boolean b) {
-        // do nothing
+// do nothing
     }
 
     public byte[] serialize(String topic, T dataObject) {
@@ -32,7 +37,7 @@ public class ObjectSerializer<T> implements Serializer<T>{
         String json = buildJson(dataObject);
         stopWatch.stop();
 
-        log.info(json);
+        log.info("json constructed: "+json);
 
         stopWatch.start("get bytes of json string");
         byte[] encrypted = json.getBytes();
@@ -40,6 +45,7 @@ public class ObjectSerializer<T> implements Serializer<T>{
 
         log.debug(stopWatch.prettyPrint());
         return encrypted;
+
     }
 
     public void close() {
