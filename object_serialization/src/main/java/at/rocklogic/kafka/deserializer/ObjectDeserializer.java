@@ -41,14 +41,21 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
         stopWatch.start("kafka topic");
         KafkaTopics kafkaTopic = topics.get(topic);
         stopWatch.stop();
+        T dataObject;
+        if(kafkaTopic != null){
 
         String json = new String(bytes);
         stopWatch.start("parsing json");
-        T dataObject = parseJson(kafkaTopic, json);
+        dataObject = parseJson(kafkaTopic, json);
         stopWatch.stop();
 
         log.debug(stopWatch.prettyPrint());
 
+        }
+        else{
+            log.error("Could not retrieve topic \""+topic+"\" from topic map");
+            dataObject = null;
+        }
         return dataObject;
     }
 
