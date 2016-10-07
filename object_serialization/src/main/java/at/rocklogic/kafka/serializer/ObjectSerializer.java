@@ -30,6 +30,12 @@ public class ObjectSerializer<T> implements Serializer<T>{
 // do nothing
     }
 
+    /**
+     * serializes the given dataObject to a JSON String
+     * @param topic the topic, the object is sent to; not used here
+     * @param dataObject the object which should be serialized
+     * @return
+     */
     public byte[] serialize(String topic, T dataObject) {
         StopWatch stopWatch = new StopWatch("serialize");
 
@@ -52,6 +58,11 @@ public class ObjectSerializer<T> implements Serializer<T>{
         // do nothing
     }
 
+    /**
+     * builds the JSON String out of a dataObject T
+     * @param dataObject the object which will be serialized
+     * @return
+     */
     private String buildJson(T dataObject) {
         try {
             return objectMapper.writeValueAsString(dataObject);

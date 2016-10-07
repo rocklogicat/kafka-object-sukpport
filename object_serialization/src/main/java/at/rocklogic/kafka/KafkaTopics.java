@@ -1,7 +1,9 @@
 package at.rocklogic.kafka;
 
 
-
+/**
+ * Class for the mapping of topics to Objects used in the Deserialization process
+ */
 public class KafkaTopics {
 
     private Class dtoClass;

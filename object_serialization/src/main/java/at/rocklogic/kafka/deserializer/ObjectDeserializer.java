@@ -22,6 +22,7 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
     static {
         // FIXME: this should be done by Spring
         objectMapper = new JsonConfiguration().objectMapper();
+
     }
 
     /**
@@ -36,6 +37,13 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
         }
     }
 
+    /**
+     * Deserializes the incoming message of a topic, by using the topic-object Mapping provided in the
+     * Configuration
+     * @param topic the topic in which the bytes have been sent
+     * @param bytes payload of the Message
+     * @return deserialized Object T
+     */
     public T deserialize(String topic, byte[] bytes) {
         StopWatch stopWatch = new StopWatch("deserialize");
         stopWatch.start("kafka topic");
@@ -59,6 +67,7 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
         return dataObject;
     }
 
+    
     private T parseJson(KafkaTopics kafkaTopic, String json) {
         T dataObject;
         try {
