@@ -12,7 +12,7 @@
 
     <groupId>at.rocklogic.kafka</groupId>
     <artifactId>object-support</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2</version>
 
     <dependencies>
         <dependency>
@@ -48,6 +48,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>4.1.5.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
         </dependency>
 
 

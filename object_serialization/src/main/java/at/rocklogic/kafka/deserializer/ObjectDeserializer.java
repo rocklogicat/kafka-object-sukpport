@@ -1,21 +1,22 @@
 package at.rocklogic.kafka.deserializer;
 
 
-import at.rocklogic.kafka.KafkaTopics;
+import at.rocklogic.kafka.TopicMapping;
 import at.rocklogic.kafka.configuration.JsonConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Deserializer;
+import org.reflections.Reflections;
 import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 public class ObjectDeserializer<T> implements Deserializer<T> {
 
-    public static final String TOPIC_CONFIGURATION = "object.deserialization.topics";
-    private Map<String, KafkaTopics> topics;
+    private Set<Class<?>> topicClasses;
 
     private static ObjectMapper objectMapper;
 
@@ -25,16 +26,20 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
 
     }
 
+    public ObjectDeserializer(){
+        //TODO narrow focus of package down?
+        Reflections reflections = new Reflections("");
+        topicClasses = reflections.getTypesAnnotatedWith(TopicMapping.class);
+
+    }
+
     /**
      * The configure method simply receives the entire Property instance you used to configure the Producer/Consumer.
      * @param map
      * @param b
      */
     public void configure(Map<String, ?> map, boolean b) {
-        topics = (Map)map.get(TOPIC_CONFIGURATION);
-        if(topics == null){
-            throw new RuntimeException("Topic Configuration not found");
-        }
+        // do nothing
     }
 
     /**
@@ -47,31 +52,46 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
     public T deserialize(String topic, byte[] bytes) {
         StopWatch stopWatch = new StopWatch("deserialize");
         stopWatch.start("kafka topic");
-        KafkaTopics kafkaTopic = topics.get(topic);
+
         stopWatch.stop();
         T dataObject;
-        if(kafkaTopic != null){
 
         String json = new String(bytes);
         stopWatch.start("parsing json");
-        dataObject = parseJson(kafkaTopic, json);
+        dataObject = parseJson(getClassForTopic(topic), json);
         stopWatch.stop();
 
         log.debug(stopWatch.prettyPrint());
 
-        }
-        else{
-            log.error("Could not retrieve topic \""+topic+"\" from topic map");
-            dataObject = null;
-        }
         return dataObject;
     }
 
+    private Class<?> getClassForTopic(String topic){
+        Class<?> topicClass = null;
+        for(Class<?> entityClass : topicClasses){
+            TopicMapping annotation = entityClass.getAnnotation(TopicMapping.class);
+            if(topic.equals(annotation.topic())){
+                if(topicClass == null){
+                    topicClass = entityClass;
+                }
+                else{
+                    throw new RuntimeException("Multiple Classes found for topic " + topic+". Should only be one Class per topic.");
+                }
+            }
+        }
+        if(topicClass == null){
+            throw new RuntimeException("No Class found for topic " + topic+".");
+
+        }
+        return topicClass;
+
+    }
+
     
-    private T parseJson(KafkaTopics kafkaTopic, String json) {
+    private T parseJson(Class<?> topicClass, String json) {
         T dataObject;
         try {
-            dataObject = (T) objectMapper.readValue(json, kafkaTopic.getDtoClass());
+            dataObject = (T) objectMapper.readValue(json, topicClass);
         } catch (IOException e) {
             log.error("", e);
             dataObject = null;

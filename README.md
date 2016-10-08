@@ -16,6 +16,4 @@ Set
 
 ```ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG ``` as well as ``` ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG ``` to ```at.rocklogic.kafka.serializer.ObjectDeserializer.class```.
 
-Set up a Map<String, KafkaTopics> in which you specify the corresponding class for each Topic. 
-Put this map into the consumerConfigs under ``` ObjectDeserializer.TOPIC_CONFIGURATION ```. 
-
+Specify your classes, which should be mapped per topic with the ``` @TopicMapping ```

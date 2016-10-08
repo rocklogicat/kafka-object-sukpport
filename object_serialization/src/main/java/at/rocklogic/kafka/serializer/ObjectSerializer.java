@@ -49,6 +49,8 @@ public class ObjectSerializer<T> implements Serializer<T>{
         byte[] encrypted = json.getBytes();
         stopWatch.stop();
 
+        //TODO variablen umbenennen
+
         log.debug(stopWatch.prettyPrint());
         return encrypted;
 

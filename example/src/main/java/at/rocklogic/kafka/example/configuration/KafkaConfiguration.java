@@ -1,9 +1,6 @@
 package at.rocklogic.kafka.example.configuration;
 
-import at.rocklogic.kafka.KafkaTopics;
-import at.rocklogic.kafka.deserializer.ObjectDeserializer;
 import at.rocklogic.kafka.example.model.baseClass;
-import at.rocklogic.kafka.example.model.testClass;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.context.annotation.Bean;
@@ -13,12 +10,14 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 @EnableKafka
+@EnableScheduling
 public class KafkaConfiguration {
 
     private String broker = "localhost:9092";
@@ -63,14 +62,11 @@ public class KafkaConfiguration {
 
     @Bean
     public Map<String, Object> consumerConfigs() {
-        Map<String, KafkaTopics> topicsMap = new HashMap<String, KafkaTopics>();
-        topicsMap.put("test", new KafkaTopics("test", testClass.class));
         Map<String, Object> props = new HashMap<String, Object>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, broker);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, group);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, at.rocklogic.kafka.deserializer.ObjectDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, at.rocklogic.kafka.deserializer.ObjectDeserializer.class);
-        props.put(ObjectDeserializer.TOPIC_CONFIGURATION, topicsMap);
         return props;
     }
 }
