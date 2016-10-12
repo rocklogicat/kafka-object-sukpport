@@ -93,7 +93,7 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
         try {
             dataObject = (T) objectMapper.readValue(json, topicClass);
         } catch (IOException e) {
-            log.error("", e);
+            log.error("An error occurred while parsing the payload: ", e);
             dataObject = null;
         }
         return dataObject;
