@@ -10,6 +10,11 @@ import org.springframework.util.StopWatch;
 
 import java.util.Map;
 
+/**
+ * Generic ObjectSerializer, serializes Objects of class T
+ * to a json String. Used like any other Serializer
+ * @param <T> The class to be serialized
+ */
 @Slf4j
 public class ObjectSerializer<T> implements Serializer<T>{
 
@@ -22,19 +27,18 @@ public class ObjectSerializer<T> implements Serializer<T>{
 
 
     /**
-     * The configure method simply receives the entire Property instance you used to configure the Producer/Consumer.
-     * @param map
-     * @param b
+     * does nothing in this case
+     * @param map map for configuration
+     * @param b boolean
      */
     public void configure(Map<String, ?> map, boolean b) {
-// do nothing
     }
 
     /**
      * serializes the given dataObject to a JSON String
      * @param topic the topic, the object is sent to; not used here
      * @param dataObject the object which should be serialized
-     * @return
+     * @return JSON Byte Array
      */
     public byte[] serialize(String topic, T dataObject) {
         StopWatch stopWatch = new StopWatch("serialize");
@@ -56,8 +60,10 @@ public class ObjectSerializer<T> implements Serializer<T>{
 
     }
 
+    /**
+     * does nothing in this case
+     */
     public void close() {
-        // do nothing
     }
 
     /**

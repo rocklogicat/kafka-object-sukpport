@@ -13,6 +13,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Generic ObjectDeserializer, deserializes Objects of class T
+ * from a json String. Used like any other Deserializer
+ * @param <T> The class, the json String has to be deserialized
+ */
 @Slf4j
 public class ObjectDeserializer<T> implements Deserializer<T> {
 
@@ -26,6 +31,10 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
 
     }
 
+    /**
+     * initializes the Deserializer, therefore all occurences
+     * of @ToppicMapping annotated classes are taken.
+     */
     public ObjectDeserializer(){
         //TODO narrow focus of package down?
         Reflections reflections = new Reflections("");
@@ -34,9 +43,9 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
     }
 
     /**
-     * The configure method simply receives the entire Property instance you used to configure the Producer/Consumer.
-     * @param map
-     * @param b
+     * does nothing in this case
+     * @param map map for configuration
+     * @param b boolean
      */
     public void configure(Map<String, ?> map, boolean b) {
         // do nothing
@@ -99,6 +108,9 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
         return dataObject;
     }
 
+    /**
+     * does nothing in this case
+     */
     public void close() {
         // do nothing
     }
