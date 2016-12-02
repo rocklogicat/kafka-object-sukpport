@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.reflections.Reflections;
 import org.springframework.util.StopWatch;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -79,7 +80,14 @@ public class ObjectDeserializer<T> implements Deserializer<T> {
         Class<?> topicClass = null;
         for(Class<?> entityClass : topicClasses){
             TopicMapping annotation = entityClass.getAnnotation(TopicMapping.class);
-            if(topic.equals(annotation.topic())){
+            boolean mappingMatches = false;
+            if(!StringUtils.isEmpty(annotation.topicPattern())){
+                mappingMatches = topic.matches(annotation.topicPattern());
+            }
+            else{
+                mappingMatches = topic.equals(annotation.topic());
+            }
+            if(mappingMatches){
                 if(topicClass == null){
                     topicClass = entityClass;
                 }

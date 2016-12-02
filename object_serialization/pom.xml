@@ -6,7 +6,7 @@
 
     <groupId>at.rocklogic.kafka</groupId>
     <artifactId>object-support</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 
 
     <name>at.rocklogic.kafka.object-support</name>
